@@ -6,19 +6,33 @@ on:
       - pre-prod
       - prod
   pull_request:
+    branches:
+      - pre-prod
+      - prod
 
 jobs:
   terraform:
     name: 'Terraform Plan & Apply'
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      id-token: write
+
     defaults:
       run:
-        working-directory: ./envs/${{ github.ref_name }}
+        working-directory: ./envs/${{ github.head_ref || github.ref_name }}
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -26,12 +40,11 @@ jobs:
           terraform_version: 1.5.7
 
       - name: Terraform Init
-        run: terraform init -backend-config="../../bootstrap/backend-${{ github.ref_name }}.tf"
+        run: terraform init
 
       - name: Terraform Plan
         run: terraform plan -var-file="terraform.tfvars"
 
-      # Optional: Auto apply only in pre-prod (NOT in prod)
       - name: Terraform Apply
-        if: github.ref_name == 'pre-prod'
+        if: github.event_name == 'push' && github.ref_name == 'pre-prod'
         run: terraform apply -auto-approve -var-file="terraform.tfvars"
