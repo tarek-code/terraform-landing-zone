@@ -41,3 +41,11 @@ module "compute" {
   subnet_ids         = module.network.public_subnet_ids
   security_group_ids = [aws_security_group.ec2_sg.id]
 }
+module "logging" {
+  source = "../../modules/logging"
+
+  vpc_id      = module.network.vpc_id
+  log_bucket  = "poc-prod-logs-bucket"
+  log_group   = "poc-prod-log-group"
+  environment = "prod"
+}
