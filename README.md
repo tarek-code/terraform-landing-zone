@@ -129,13 +129,3 @@ terraform apply -var-file="terraform.tfvars"
 * Make sure S3 bucket and DynamoDB table are created before `init`.
 * Logging module is used in **prod only**.
 
----
-
-## 🚊 Submission
-
-* Submit GitHub repo link to: **[ashref.mohsen@fawry.com](mailto:ashref.mohsen@fawry.com)**
-* Ensure CI/CD applies Terraform correctly for both branches
-
----
-
-Good luck ✨ & happy Terraforming ⚒️
