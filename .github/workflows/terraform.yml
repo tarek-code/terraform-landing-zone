@@ -15,7 +15,7 @@ jobs:
     name: 'Terraform Plan & Apply'
     runs-on: ubuntu-latest
 
-    # تحديد الـ working directory بناءً على نوع الـ event
+  
     defaults:
       run:
         working-directory: ./envs/${{ github.head_ref || github.ref_name }}
@@ -30,12 +30,12 @@ jobs:
           terraform_version: 1.5.7
 
       - name: Terraform Init
-        run: terraform init -backend-config="../../bootstrap/backend-${{ github.head_ref || github.ref_name }}.tf"
+        run: terraform init
 
       - name: Terraform Plan
         run: terraform plan -var-file="terraform.tfvars"
 
-      # Apply فقط في حالة Push مباشر إلى pre-prod
+ 
       - name: Terraform Apply
         if: github.event_name == 'push' && github.ref_name == 'pre-prod'
         run: terraform apply -auto-approve -var-file="terraform.tfvars"
