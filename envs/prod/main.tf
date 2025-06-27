@@ -42,10 +42,9 @@ module "compute" {
   security_group_ids = [aws_security_group.ec2_sg.id]
 }
 module "logging" {
-  source = "../../modules/logging"
-
-  vpc_id      = module.network.vpc_id
-  log_bucket  = "poc-prod-logs-bucket"
-  log_group   = "poc-prod-log-group"
-  environment = "prod"
+  source         = "../../modules/logging"
+  vpc_id         = module.network.vpc_id
+  s3_bucket_name = "poc-prod-logs-bucket"
+  log_group_name = "poc-prod-log-group"
+  environment    = "prod"
 }

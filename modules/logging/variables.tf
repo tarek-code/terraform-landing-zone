@@ -1,14 +1,19 @@
-variable "environment" {
-  description = "Environment (prod/pre-prod)"
+variable "s3_bucket_name" {
+  description = "The name of the S3 bucket for storing VPC flow logs"
   type        = string
 }
 
-variable "s3_bucket_name" {
-  description = "Name of the S3 bucket to store logs"
+variable "log_group_name" {
+  description = "The name of the CloudWatch log group"
   type        = string
 }
 
 variable "vpc_id" {
-  description = "ID of the VPC for flow logs"
+  description = "The VPC ID to attach flow logs to"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name (prod/pre-prod)"
   type        = string
 }
