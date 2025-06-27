@@ -1,9 +1,9 @@
 terraform {
   backend "s3" {
-    bucket         = "poc-prod-tfstate-2025"
+    bucket         = "poc-pre-prod-tfstate-2025"
     key            = "terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "poc-prod-locks"
+    dynamodb_table = "poc-pre-prod-locks"
     encrypt        = true
   }
 }
@@ -25,7 +25,7 @@ resource "aws_s3_bucket" "tf_state" {
 
   tags = {
     Name        = var.bucket_name
-    Environment = "prod"
+    Environment = "pre-prod"
   }
 }
 
@@ -51,6 +51,6 @@ resource "aws_dynamodb_table" "tf_lock" {
 
   tags = {
     Name        = var.dynamodb_table_name
-    Environment = "prod"
+    Environment = "pre-prod"
   }
 }
