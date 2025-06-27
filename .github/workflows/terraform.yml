@@ -36,4 +36,4 @@ jobs:
 
       - name: Terraform Apply (only on push to pre-prod)
         if: github.event_name == 'push' && github.ref_name == 'pre-prod'
-        run: terraform apply -auto-approve -var-file="terraform.tfvars"
+        run: terraform apply -auto-approve -var-file="terraform.tfvars" 
