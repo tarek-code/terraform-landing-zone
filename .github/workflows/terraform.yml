@@ -6,15 +6,19 @@ on:
       - pre-prod
       - prod
   pull_request:
+    branches:
+      - pre-prod
+      - prod
 
 jobs:
   terraform:
     name: 'Terraform Plan & Apply'
     runs-on: ubuntu-latest
 
+    # تحديد الـ working directory بناءً على نوع الـ event
     defaults:
       run:
-        working-directory: ./envs/${{ github.ref_name }}
+        working-directory: ./envs/${{ github.head_ref || github.ref_name }}
 
     steps:
       - name: Checkout repo
@@ -26,12 +30,12 @@ jobs:
           terraform_version: 1.5.7
 
       - name: Terraform Init
-        run: terraform init -backend-config="../../bootstrap/backend-${{ github.ref_name }}.tf"
+        run: terraform init -backend-config="../../bootstrap/backend-${{ github.head_ref || github.ref_name }}.tf"
 
       - name: Terraform Plan
         run: terraform plan -var-file="terraform.tfvars"
 
-      # Optional: Auto apply only in pre-prod (NOT in prod)
+      # Apply فقط في حالة Push مباشر إلى pre-prod
       - name: Terraform Apply
-        if: github.ref_name == 'pre-prod'
+        if: github.event_name == 'push' && github.ref_name == 'pre-prod'
         run: terraform apply -auto-approve -var-file="terraform.tfvars"
